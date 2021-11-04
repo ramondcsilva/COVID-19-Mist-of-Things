@@ -13,7 +13,7 @@ from DatabaseController import updateTableCardiaca
 
 def on_connect(client, userdata, flags, rc):
 	print('connected (%s)' % client._client_id)
-	client.subscribe(topic='cardiaca', qos=2)
+	client.subscribe(topic='cardiaco', qos=2)
 
 def on_message(client, userdata, message):
     print('------------------------------')

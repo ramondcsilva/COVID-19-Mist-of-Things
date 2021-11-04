@@ -25,17 +25,17 @@ def createDatabase():
     cur.execute("drop table if exists arterial")
     
     cur.execute('''Create table ficha 
-                   (id unique, nome, estado, pontuacao)''')
+                   (id int unique, nome, estado, pontuacao int)''')
     cur.execute('''Create table temperatura 
-                   (id unique, valor)''')
+                   (id int unique, valortemperatura int)''')
     cur.execute('''Create table saturacao 
-                   (id unique, valor)''')
+                   (id int unique, valorsaturacao int)''')
     cur.execute('''Create table respiracao 
-                   (id unique, valor)''')
+                   (id int unique, valorrespiracao int)''')
     cur.execute('''Create table cardiaca 
-                   (id unique, valor)''')
+                   (id int unique, valorcardiaca int)''')
     cur.execute('''Create table arterial 
-                   (id unique, valor)''')
+                   (id int unique, valorarterial int)''')
     
     con.commit()
     con.close()
@@ -50,10 +50,9 @@ def updateTableFicha(data):
     con = sql.connect('dbPaciente.db')
     cur = con.cursor()
     
-    
-    cur.execute("update ficha set nome='"+dataSave[2]+"', estado='"+dataSave[4]+"', pontuacao='"+dataSave[6]+"' where id='"+dataSave[0]+"'")
-    
-    cur.execute("insert or ignore into ficha values ('"+dataSave[0]+"','"+dataSave[2]+"','"+dataSave[4]+"','"+dataSave[6]+"')")
+    cur.execute("update ficha set nome='"+dataSave[2]+"', estado='"+dataSave[6]+"', pontuacao="+dataSave[8]+" where id='"+dataSave[0]+"'")
+        
+    cur.execute("insert or ignore into ficha values ("+dataSave[0]+",'"+dataSave[2]+"','"+dataSave[6]+"',"+dataSave[8]+")")
     
     con.commit()
     con.close()
@@ -68,9 +67,9 @@ def updateTableTemperatura(data):
     con = sql.connect('dbPaciente.db')
     cur = con.cursor()
     
-    cur.execute("update temperatura set valor="+dataSave[2]+" where id='"+dataSave[0]+"'")
+    cur.execute("update temperatura set valortemperatura="+dataSave[2]+" where id="+dataSave[0])
     
-    cur.execute("Insert or ignore into temperatura values ('"+dataSave[0]+"','"+dataSave[2]+"')")
+    cur.execute("insert or ignore into temperatura values ("+dataSave[0]+","+dataSave[2]+")")
     
     con.commit()
     con.close()
@@ -86,9 +85,15 @@ def updateTableSaturacao(data):
     cur = con.cursor()
     
     
-    cur.execute("update temperatura set valor="+dataSave[2]+" where id='"+dataSave[0]+"'")
+    #cur.execute("if not exists(SELECT * from saturacao where id="+dataSave[0]+")"+             
+    #                " update saturacao set valor_saturacao="+dataSave[2]+" where id="+dataSave[0]+         
+    #                " else "+   
+    #                "insert into saturacao values ("+dataSave[0]+","+dataSave[2]+ 
+    #                ")")
     
-    cur.execute("Insert or ignore into saturacao values ('"+dataSave[0]+"','"+dataSave[2]+"')")
+    cur.execute("update saturacao set valorsaturacao="+dataSave[2]+" where id="+dataSave[0])
+    
+    cur.execute("insert or ignore into saturacao values ("+dataSave[0]+","+dataSave[2]+")")
     
     con.commit()
     con.close()
@@ -103,9 +108,9 @@ def updateTableRespiracao(data):
     con = sql.connect('dbPaciente.db')
     cur = con.cursor()
     
-    cur.execute("update temperatura set valor="+dataSave[2]+" where id='"+dataSave[0]+"'")
+    cur.execute("update respiracao set valorrespiracao="+dataSave[2]+" where id="+dataSave[0])
     
-    cur.execute("Insert or ignore into respiracao values ('"+dataSave[0]+"','"+dataSave[2]+"')")
+    cur.execute("insert or ignore into respiracao values ("+dataSave[0]+","+dataSave[2]+")")
     
     con.commit()
     con.close()
@@ -120,9 +125,9 @@ def updateTableCardiaca(data):
     con = sql.connect('dbPaciente.db')
     cur = con.cursor()
     
-    cur.execute("update temperatura set valor="+dataSave[2]+" where id='"+dataSave[0]+"'")
+    cur.execute("update cardiaca set valorcardiaca="+dataSave[2]+" where id="+dataSave[0])
     
-    cur.execute("Insert or ignore into cardiaca values ('"+dataSave[0]+"','"+dataSave[2]+"')")
+    cur.execute("insert or ignore into cardiaca values ("+dataSave[0]+","+dataSave[2]+")")
     
     con.commit()
     con.close()
@@ -137,9 +142,9 @@ def updateTableArterial(data):
     con = sql.connect('dbPaciente.db')
     cur = con.cursor()
     
-    cur.execute("update temperatura set valor="+dataSave[2]+" where id='"+dataSave[0]+"'")
+    cur.execute("update arterial set valorarterial="+dataSave[2]+" where id="+dataSave[0])
     
-    cur.execute("Insert or ignore into arterial values ('"+dataSave[0]+"','"+dataSave[2]+"')")
+    cur.execute("insert or ignore into arterial values ("+dataSave[0]+","+dataSave[2]+")")
     
     con.commit()
     con.close()

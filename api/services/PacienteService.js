@@ -11,9 +11,9 @@ app.use(express.json());
  * Regra de Negócio -
  */
 const PacienteService = () => {
-  const sql = `SELECT ficha.id, ficha.nome,ficha.estado,ficha.pontuacao, temperatura.valor_temperatura,
-    saturacao.valor_saturacao,cardiaca.valor_cardiaca,respiracao.valor_respiracao, 
-    arterial.valor_arterial from ficha, temperatura,saturacao,cardiaca,respiracao,arterial WHERE ficha.id=temperatura.id and ficha.id=saturacao.id
+  const sql = `SELECT ficha.id, ficha.nome,ficha.estado,ficha.pontuacao, temperatura.valortemperatura,
+    saturacao.valorsaturacao,cardiaca.valorcardiaca,respiracao.valorrespiracao, 
+    arterial.valorarterial from ficha, temperatura,saturacao,cardiaca,respiracao,arterial WHERE ficha.id=temperatura.id and ficha.id=saturacao.id
     and ficha.id = cardiaca.id and ficha.id = respiracao.id and ficha.id=arterial.id
     `;
   return new Promise((resolve, reject) => {
