@@ -30,7 +30,7 @@ topicCardiaca = "cardiaco"
 topicArterial = "arterial"
 
 # generate client ID with pub prefix randomly
-client_id = f'paciente'
+client_id = f'paciente'+str(random.randint(0,1000))
 # username = 'emqx'
 # password = 'public'
 
@@ -89,12 +89,12 @@ def publish(client):
         if valueArte == 70:
             valueArte = valueArte + 1
         
-        message = ["1,Nome,Ramon,idade,30,Estado,Normal,Pontuacao,00",
-                   "1,Temperatura,"+str(valueTemp),
-                   "1,SaturacaoSanguinea,"+str(valueSatu),
-                   "1,FrequenciaRespiratoria,"+str(valueResp),
-                   "1,FrequenciaCardiaca,"+str(valueCard),
-                   "1,PressaoArterialMaxima,"+str(valueArte)]
+        message = [str(client_id)+",Nome,Bezerro,idade,22,Estado,Normal,Pontuacao,00",
+                   str(client_id)+",Temperatura,"+str(valueTemp),
+                   str(client_id)+",SaturacaoSanguinea,"+str(valueSatu),
+                   str(client_id)+",FrequenciaRespiratoria,"+str(valueResp),
+                   str(client_id)+",FrequenciaCardiaca,"+str(valueCard),
+                   str(client_id)+",PressaoArterialMaxima,"+str(valueArte)]
         
         #+",PressaoArterialMaxima,"+str(valueArte)+",FrequenciaRespiratoria,"+str(valueResp)+",FrequenciaCardiaca,"+str(valueCard)+",SaturacaoSanguinea,"+str(valueSatu)+",Estado,x,Pontuacao,00"
             
