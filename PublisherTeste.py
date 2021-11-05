@@ -30,9 +30,12 @@ topicCardiaca = "cardiaco"
 topicArterial = "arterial"
 
 # generate client ID with pub prefix randomly
-client_id = f'paciente'+str(random.randint(0,1000))
+id = str(random.randint(0,1000))
+client_id = f'paciente'+str(id)
+msg_count = 0
 # username = 'emqx'
 # password = 'public'
+
 
 def connect_mqtt():
     def on_connect(client, userdata, flags, rc):
@@ -57,6 +60,8 @@ def publish(client):
             valueResp = rndRespiratorio
             valueCard = rndCardiaco
             valueArte = rndArterial
+            pontuacao = 0
+            estado = ''
         
         # Soma com valores randomicos -1 a 1 gerando uma media longiqua
         valueTemp = valueTemp + random.randint(-1,1)
@@ -89,18 +94,99 @@ def publish(client):
         if valueArte == 70:
             valueArte = valueArte + 1
         
-        message = [str(client_id)+",Nome,Bezerro,idade,22,Estado,Normal,Pontuacao,00",
-                   str(client_id)+",Temperatura,"+str(valueTemp),
-                   str(client_id)+",SaturacaoSanguinea,"+str(valueSatu),
-                   str(client_id)+",FrequenciaRespiratoria,"+str(valueResp),
-                   str(client_id)+",FrequenciaCardiaca,"+str(valueCard),
-                   str(client_id)+",PressaoArterialMaxima,"+str(valueArte)]
+        
+        #Temperatura
+        if valueTemp >= 38:   
+            x = pontuacao
+            x = x + 1
+            pontuacao = x                
+        else:
+           x = pontuacao
+           x = x + 0
+           pontuacao = x
+        
+        # Saturacao Sanguinea
+        if valueSatu < 86:
+            x = x + 3
+            pontuacao = x
+        elif valueSatu < 90: 
+            x = x + 2
+            pontuacao = x
+            
+        elif valueSatu < 93:
+            x = x + 1
+            pontuacao = x
+        else:
+            x = x + 0
+            pontuacao = x    
+                
+        # Frequencia Respiratoria
+        if valueResp > 25:
+            x = x + 3
+            pontuacao = x
+        elif valueResp > 20: 
+            x = x + 2
+            pontuacao = x
+            
+        elif valueResp > 15:
+            x = x + 1
+            pontuacao = x
+            
+        else:
+            x = x + 0
+            pontuacao = x
+        
+        
+        # Frequencia Cardiaca
+        if valueCard > 120:
+            x = x + 3
+            pontuacao = x
+        elif valueCard > 110: 
+            x = x + 2
+            pontuacao = x
+            
+        elif valueCard > 100:
+            x = x + 1
+            pontuacao = x
+            
+        else:
+            x = x + 0
+            pontuacao = x
+        
+        
+        # Pontuacao Pressao Arterial
+        if valueArte < 72:
+            x = x + 3
+            pontuacao = x
+        elif valueArte < 81: 
+            x = x + 2
+            pontuacao = x
+        elif valueArte < 100:
+            x = x + 1
+            pontuacao = x
+        else:
+            x = x + 0
+            pontuacao = x
+        
+        # Informa o Estado do paciente de acordo com os seus dados
+        if x >= 5:
+            estado = 'Grave'
+        elif x > 2:    
+            estado = 'Alerta'
+        else:
+            estado = 'Estavel'
+        
+        
+        message = [str(id)+",Nome,paciente_"+str(id)+",idade,22,Estado,"+estado+",Pontuacao,"+str(pontuacao),
+                   str(id)+",Temperatura,"+str(valueTemp),
+                   str(id)+",SaturacaoSanguinea,"+str(valueSatu),
+                   str(id)+",FrequenciaRespiratoria,"+str(valueResp),
+                   str(id)+",FrequenciaCardiaca,"+str(valueCard),
+                   str(id)+",PressaoArterialMaxima,"+str(valueArte)]
         
         #+",PressaoArterialMaxima,"+str(valueArte)+",FrequenciaRespiratoria,"+str(valueResp)+",FrequenciaCardiaca,"+str(valueCard)+",SaturacaoSanguinea,"+str(valueSatu)+",Estado,x,Pontuacao,00"
             
         return message
-    
-    msg_count = 0
     
     while True:
         time.sleep(1)
@@ -123,7 +209,7 @@ def publish(client):
             print(f"Send `{msg}` to topic `{topic}`")
         else:
             print(f"Failed to send message to topic {topic}")
-        msg_count += 1
+        # msg_count += 1
 
 def run():
     client = connect_mqtt()
